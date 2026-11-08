@@ -20,10 +20,11 @@ A rendszer elsődleges célja annak bemutatása, hogy a képzés során elsaját
 
 * **Központi vezérlő & operációs rendszer:** Raspberry Pi, Linux (Debian-alapú környezet)
 * **Logikai motor & folyamatvezérlés:** Node-RED
+* **SCADA** Nextion, Node-RED dashboard
 * **Adatkezelés:** Relációs adatbázis (SQL) adatnaplózáshoz és állapotkövetéshez
-* **Hálózat & protokollok:** TCP/IP, MQTT, ZigBee2MQTT, HTTP/HTTPS, SSH, helyi hálózati szabványok (T568B struktúrált kábelezés)
-* **IoT:** ESP32, Microchip PIC 18F.., Nextion, Sonoff, xaomi, RFID, Camera, ect.
-* **AI/MI** Hailo-10H (Off-line AI accelerator) 
+* **Hálózat & protokollok:** MODBUS (RS485), Serial, TCP/IP, MQTT, ZigBee2MQTT, HTTP/HTTPS, SSH, helyi hálózati szabványok
+* **IoT:** ESP32, Microchip PIC 18F.., Nextion, Sonoff, xaomi, RFID, Camera, Arteco, ect.
+* **AI/MI** Hailo-10H (Off-line AI accelerator)
 
 ---
 
