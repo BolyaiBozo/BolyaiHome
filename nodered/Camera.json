@@ -1,0 +1,505 @@
+[
+    {
+        "id": "5e0f6c9c6d23af17",
+        "type": "comment",
+        "z": "2454b17b.c3fa7e",
+        "name": "ESP32-CAM",
+        "info": "",
+        "x": 70,
+        "y": 6760,
+        "wires": []
+    },
+    {
+        "id": "cb4b1bc5f346410b",
+        "type": "ui_template",
+        "z": "2454b17b.c3fa7e",
+        "group": "c476d9f06a877a5f",
+        "name": "CAM#1",
+        "order": 8,
+        "width": "6",
+        "height": "5",
+        "format": "<div style=\"width: 100%; text-align: center;\">\n    <img src=\"http://192.168.0.96:81/stream\" style=\"width: 100%; max-width: 640px; height: auto; border-radius: 6px;\" alt=\"ESP32-CAM Live Stream\" />\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 100,
+        "y": 6800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0eee4d8bab23f408",
+        "type": "ui_button",
+        "z": "2454b17b.c3fa7e",
+        "name": "snapshot",
+        "group": "c476d9f06a877a5f",
+        "order": 1,
+        "width": "1",
+        "height": "1",
+        "passthru": false,
+        "label": "",
+        "tooltip": "press the button for take a picture",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "fa-file-picture-o fa-2x",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 120,
+        "y": 6840,
+        "wires": [
+            [
+                "d1e125e97efbf523"
+            ]
+        ]
+    },
+    {
+        "id": "d1e125e97efbf523",
+        "type": "http request",
+        "z": "2454b17b.c3fa7e",
+        "name": "CAM#1",
+        "method": "GET",
+        "ret": "bin",
+        "paytoqs": "ignore",
+        "url": "http://192.168.0.96/capture",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 260,
+        "y": 6840,
+        "wires": [
+            [
+                "edb2e18421d1b880",
+                "182a02962f5e761d"
+            ]
+        ]
+    },
+    {
+        "id": "edb2e18421d1b880",
+        "type": "function",
+        "z": "2454b17b.c3fa7e",
+        "name": "MakeName",
+        "func": "const now = new Date().toISOString().replace(/[:.]/g, '-');\nmsg.filename = `/tmp/cam1_${now}.jpg`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 6840,
+        "wires": [
+            [
+                "ddd39fe125bdab62"
+            ]
+        ]
+    },
+    {
+        "id": "ddd39fe125bdab62",
+        "type": "file",
+        "z": "2454b17b.c3fa7e",
+        "name": "",
+        "filename": "filename",
+        "filenameType": "msg",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "binary",
+        "x": 560,
+        "y": 6840,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "db8a956edee79a76",
+        "type": "http request",
+        "z": "2454b17b.c3fa7e",
+        "name": "CAM#1",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 420,
+        "y": 6880,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fc3d33143f82ba0e",
+        "type": "function",
+        "z": "2454b17b.c3fa7e",
+        "name": "On/Off LED",
+        "func": "if(msg.payload) {\n    msg.payload =\"http://192.168.0.96/control?var=led_intensity&val=255\";\n    msg.url=\"http://192.168.0.96/control?var=led_intensity&val=255\";\n} else {\n    msg.payload =\"http://192.168.0.96/control?var=led_intensity&val=0\";\n    msg.url = \"http://192.168.0.96/control?var=led_intensity&val=0\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 6880,
+        "wires": [
+            [
+                "db8a956edee79a76"
+            ]
+        ]
+    },
+    {
+        "id": "91398e99fc2e7589",
+        "type": "ui_switch",
+        "z": "2454b17b.c3fa7e",
+        "name": "on/off",
+        "label": "",
+        "tooltip": "On - LED On the Camera, Off - LED Off",
+        "group": "c476d9f06a877a5f",
+        "order": 2,
+        "width": "1",
+        "height": "1",
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "fa-lightbulb-o fa-2x",
+        "oncolor": "white",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "fa-lightbulb-o fa-2x",
+        "offcolor": "gray",
+        "animate": false,
+        "className": "",
+        "x": 110,
+        "y": 6880,
+        "wires": [
+            [
+                "fc3d33143f82ba0e"
+            ]
+        ]
+    },
+    {
+        "id": "1bf663f8280622a2",
+        "type": "function",
+        "z": "2454b17b.c3fa7e",
+        "name": "Decode QRCode",
+        "func": "const { Jimp: JimpLib } = Jimp;\nconst image = await JimpLib.read(msg.payload);\nconst { data, width, height } = image.bitmap;\n\nconst code = jsQR(new Uint8ClampedArray(data), width, height);\n\nif (code) {\n    msg.payload = code.data;\n    return msg;\n} else {\n    node.warn(\"Nem található QR-kód a képen\");\n    return null;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "Jimp",
+                "module": "jimp"
+            },
+            {
+                "var": "jsQR",
+                "module": "jsqr"
+            }
+        ],
+        "x": 450,
+        "y": 6920,
+        "wires": [
+            [
+                "b2d76c082a2f642a",
+                "b01d88a0989a6073"
+            ]
+        ],
+        "icon": "font-awesome/fa-qrcode"
+    },
+    {
+        "id": "36af1982269157ef",
+        "type": "ui_button",
+        "z": "2454b17b.c3fa7e",
+        "name": "QR",
+        "group": "c476d9f06a877a5f",
+        "order": 1,
+        "width": "1",
+        "height": "1",
+        "passthru": false,
+        "label": "",
+        "tooltip": "press the button for get QR-Code",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "fa-qrcode fa-2x",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 110,
+        "y": 6920,
+        "wires": [
+            [
+                "908605cad31539f1"
+            ]
+        ]
+    },
+    {
+        "id": "908605cad31539f1",
+        "type": "http request",
+        "z": "2454b17b.c3fa7e",
+        "name": "CAM#1",
+        "method": "GET",
+        "ret": "bin",
+        "paytoqs": "ignore",
+        "url": "http://192.168.0.96/capture",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 260,
+        "y": 6920,
+        "wires": [
+            [
+                "1bf663f8280622a2"
+            ]
+        ]
+    },
+    {
+        "id": "b2d76c082a2f642a",
+        "type": "debug",
+        "z": "2454b17b.c3fa7e",
+        "name": "QR-code",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 6880,
+        "wires": []
+    },
+    {
+        "id": "182a02962f5e761d",
+        "type": "link out",
+        "z": "2454b17b.c3fa7e",
+        "name": "CAM1",
+        "mode": "link",
+        "links": [
+            "5a6a46bb51c0be95"
+        ],
+        "x": 355,
+        "y": 6800,
+        "wires": [],
+        "info": "Send a pic via Telegram"
+    },
+    {
+        "id": "73837f47e45d8bd5",
+        "type": "function",
+        "z": "2454b17b.c3fa7e",
+        "name": "v-flip",
+        "func": "if(msg.payload) {\n    msg.payload =\"http://192.168.0.96/control?var=vflip&val=1\";\n    msg.url=\"http://192.168.0.96/control?var=vflip&val=1\";\n} else {\n    msg.payload =\"http://192.168.0.96/control?var=vflip&val=0\";\n    msg.url = \"http://192.168.0.96/control?var=vflip&val=0\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 250,
+        "y": 6960,
+        "wires": [
+            [
+                "db8a956edee79a76"
+            ]
+        ]
+    },
+    {
+        "id": "9921688ebf21e1a7",
+        "type": "ui_switch",
+        "z": "2454b17b.c3fa7e",
+        "name": "v-flip",
+        "label": "",
+        "tooltip": "vertical flipping",
+        "group": "c476d9f06a877a5f",
+        "order": 2,
+        "width": "1",
+        "height": "1",
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "fa-arrows-v fa-2x",
+        "oncolor": "white",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "fa-arrows-v fa-2x",
+        "offcolor": "gray",
+        "animate": false,
+        "className": "",
+        "x": 110,
+        "y": 6960,
+        "wires": [
+            [
+                "73837f47e45d8bd5"
+            ]
+        ]
+    },
+    {
+        "id": "6b4a1e0941ed8c8f",
+        "type": "function",
+        "z": "2454b17b.c3fa7e",
+        "name": "h-mirorr",
+        "func": "if(msg.payload) {\n    msg.payload =\"http://192.168.0.96/control?var=hmirror&val=1\";\n    msg.url =\"http://192.168.0.96/control?var=hmirror&val=1\";\n} else {\n    msg.payload =\"http://192.168.0.96/control?var=hmirror&val=0\";\n    msg.url = \"http://192.168.0.96/control?var=hmirror&val=0\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 7000,
+        "wires": [
+            [
+                "db8a956edee79a76"
+            ]
+        ]
+    },
+    {
+        "id": "ffb1667a0428a37a",
+        "type": "ui_switch",
+        "z": "2454b17b.c3fa7e",
+        "name": "h-mirror",
+        "label": "",
+        "tooltip": "horizontal mirroring",
+        "group": "c476d9f06a877a5f",
+        "order": 2,
+        "width": "1",
+        "height": "1",
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "fa-arrows-h fa-2x",
+        "oncolor": "white",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "fa-arrows-h fa-2x",
+        "offcolor": "gray",
+        "animate": false,
+        "className": "",
+        "x": 120,
+        "y": 7000,
+        "wires": [
+            [
+                "6b4a1e0941ed8c8f"
+            ]
+        ]
+    },
+    {
+        "id": "205c084ede45305d",
+        "type": "function",
+        "z": "2454b17b.c3fa7e",
+        "name": "UXGA/VGA",
+        "func": "if(msg.payload) {\n    msg.payload =\"http://192.168.0.96/control?var=framesize&val=10\";\n    msg.url =\"http://192.168.0.96/control?var=framesize&val=10\";\n} else {\n    msg.payload =\"http://192.168.0.96/control?var=framesize&val=8\";\n    msg.url = \"http://192.168.0.96/control?var=framesize&val=8\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 7040,
+        "wires": [
+            [
+                "db8a956edee79a76"
+            ]
+        ]
+    },
+    {
+        "id": "e23a00c2f818cbfa",
+        "type": "ui_switch",
+        "z": "2454b17b.c3fa7e",
+        "name": "UXGA",
+        "label": "",
+        "tooltip": "switch between UXGA and VGA",
+        "group": "c476d9f06a877a5f",
+        "order": 2,
+        "width": "1",
+        "height": "1",
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "fa-expand fa-2x",
+        "oncolor": "white",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "fa-expand fa-2x",
+        "offcolor": "gray",
+        "animate": false,
+        "className": "",
+        "x": 110,
+        "y": 7040,
+        "wires": [
+            [
+                "205c084ede45305d"
+            ]
+        ]
+    },
+    {
+        "id": "b01d88a0989a6073",
+        "type": "link out",
+        "z": "2454b17b.c3fa7e",
+        "name": "QRCode-out",
+        "mode": "link",
+        "links": [],
+        "x": 585,
+        "y": 6920,
+        "wires": []
+    },
+    {
+        "id": "c476d9f06a877a5f",
+        "type": "ui_group",
+        "name": "Cam#1",
+        "tab": "7aab3e0112f43cb8",
+        "order": 17,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "7aab3e0112f43cb8",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
